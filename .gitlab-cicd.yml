@@ -3,6 +3,9 @@ stages:          # List of stages for jobs, and their order of execution
   - compile
   - test
   - security
+  - build
+  - docker
+  - deploy
 
 install_tools-job:       # This job runs in the install_tools stage, which runs first.
   stage: install_tools
@@ -32,8 +35,8 @@ lint-test-job:   # This job also runs the test stage.
   tags:
     - self-hosted
 
-trivy_fs_scan-job:   # This job runs in the compile stage.
-  stage: security    # It only starts when the job in the install_tools stage completes successfully.
+trivy_fs_scan-job:   # This job runs in the security stage.
+  stage: security    # It only starts when the job in the test stage completes successfully.
   script:
     - trivy fs --format table -o fs.html .
   tags:
@@ -55,5 +58,28 @@ sonarqube-check:
   allow_failure: true
   only:
     - main
+
+build-job:   # This job runs in the build stage.
+  stage: build    # It only starts when the job in the security stage completes successfully.
+  script:
+    - mvn package
+  tags:
+    - self-hosted
+  only:
+    - main
+
+build_and_tag_push_images_job:   # This job runs in docker stage.
+  stage: docker    # It only starts when the job in the build stage completes successfully.
+  script:
+    - docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
+    - mvn package
+    - docker build -t ithubdocker01/boardgamegitlab:latest .
+    - docker push ithubdocker01/boardgamegitlab:latest
+  tags:
+    - self-hosted
+  only:
+    - main
+
+
 
 
