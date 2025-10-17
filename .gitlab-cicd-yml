@@ -1,0 +1,33 @@
+stages:          # List of stages for jobs, and their order of execution
+  - install_tools
+  - compile
+  - test
+
+install_tools-job:       # This job runs in the install_tools stage, which runs first.
+  stage: install_tools
+  script:
+    - sudo apt update
+    - sudo apt install openjdk-17-jre-headless -y
+    - sudo apt install maven -y
+    - wget -qO - https://aquasecurity.github.io/trivy-repo/deb/public.key | sudo apt-key add -
+    - echo deb https://aquasecurity.github.io/trivy-repo/deb $(lsb_release -sc) main | sudo tee -a /etc/apt/sources.list.d/trivy.list
+    - sudo apt-get update && sudo apt-get install -y trivy
+    - sudo apt  install docker.io -y && sudo chmod 666 /var/run/docker.sock
+    - sudo snap install kubectl --classic
+  tags:
+    - self-hosted
+
+compile-job:   # This job runs in the compile stage.
+  stage: compile    # It only starts when the job in the build stage completes successfully.
+  script:
+    - mvn compile
+  tags:
+    - self-hosted
+
+unit-test-job:   # This job runs in the test stage.
+  stage: test    # It only starts when the job in the build stage completes successfully.
+  script:
+    - mvn test
+  tags:
+    - self-hosted
+
