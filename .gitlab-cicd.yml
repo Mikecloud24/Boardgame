@@ -82,11 +82,8 @@ build_and_tag_push_images_job:   # This job runs in docker stage.
 
 eks_deploy_job:
   stage: deploy
-  image: amazon/aws-cli:2.15.0
+  image: lachlanevenson/k8s-aws:latest
   script:
-    - apk add --no-cache curl bash gettext
-    - curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
-    - install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
     - aws eks update-kubeconfig --region $AWS_DEFAULT_REGION --name $CLUSTER_NAME
     - kubectl get nodes
     - kubectl apply -f k8s/deployment-service.yaml
