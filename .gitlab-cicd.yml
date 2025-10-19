@@ -5,6 +5,7 @@ stages:          # List of stages for jobs, and their order of execution
   - security
   - build
   - docker
+  - deploy
 
 install_tools-job:       # This job runs in the install_tools stage, which runs first.
   stage: install_tools
