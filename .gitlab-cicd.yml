@@ -84,7 +84,7 @@ eks_deploy_job:
   script:
     - aws eks update-kubeconfig --region $AWS_DEFAULT_REGION --name $CLUSTER_NAME
     - kubectl get nodes
-    - kubectl apply -f k8s/deployment-service.yaml
+    - kubectl apply -f deployment-service.yaml
   tags:
     - self-hosted
   only:
