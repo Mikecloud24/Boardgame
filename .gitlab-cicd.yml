@@ -78,4 +78,15 @@ build_and_tag_push_images_job:   # This job runs in docker stage.
   only:
     - main
 
+eks_deploy_job:
+  stage: deploy
+  script:
+    - aws eks update-kubeconfig --region $AWS_DEFAULT_REGION --name $CLUSTER_NAME
+    - kubectl get nodes
+    - kubectl apply -f k8s/deployment-service.yaml
+  tags:
+    - self-hosted
+  only:
+    - main
+
 
