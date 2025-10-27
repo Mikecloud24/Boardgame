@@ -51,3 +51,9 @@ This web application displays lists of board games and their reviews. While anyo
   - username: bugs    |     password: bunny (user role)
   - username: daffy   |     password: duck  (manager role)
 5. You can also sign-up as a new user and customize your role to play with the application! 😊
+
+
+## .gitlab-cicd flow
+
+<img width="1911" height="493" alt="image" src="https://github.com/user-attachments/assets/446cda27-ca33-4331-aa5c-df5e5722e70e" />
+
